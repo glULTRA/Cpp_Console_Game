@@ -7,16 +7,13 @@ char gameMap[4][8] =
     {'#','@','#','#','#','#','$','#'},
     {'@','#','#','#','#','@','#','#'},
 };
-char actionList[8] = {'w','s','a','d','i','k','j','l'};
 typedef struct{
     int x = 0, y = 0;
 } PlayerVector2;
-PlayerVector2 playervec2{0,0};
+PlayerVector2 playerpos{0,0};
 
 void ShowGameMap();
 void UpdateGame(char action);
-bool IsUpdateMovementsApplied(int x, int y, char action);
-bool IsActionPossible();
 
 int main()
 {
@@ -44,29 +41,71 @@ void ShowGameMap(){
 
 void UpdateGame(char action)
 {
-    for(int i = 0; i < 4; i++){
+    for(int i = 0; i < 4; i++)
+    {
         for(int j = 0; j < 8; j++)
         {
-            if(action == 'l')
+            /* 4 direction with w,a,s,d*/
+            if(action == 'd')
             {
-                if(gameMap[i][j] == '#')
+                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
                 {
-                    if(playervec2.x == i && playervec2.y+1 == j)
+                    if(playerpos.x == i && playerpos.y+1 == j)
                     {
-                        gameMap[i][j] = ' ';
+                        playerpos.y += 1;
+                        gameMap[i][j-1] = ' ';
+                        gameMap[i][j] = '!';
                         return;
                     }
                 }
             }
-            if(action == 'd')
-            {
-                if(gameMap[i][j] == ' ')
+            
+            if(action == 's'){
+                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
                 {
-                    if(playervec2.x == i && playervec2.y+1 == j)
+                    if(playerpos.x + 1 == i && playerpos.y == j)
                     {
-                        playervec2.y += 1;
-                        gameMap[i][j-1] = ' ';
+                        playerpos.x += 1;
+                        gameMap[i-1][j] = ' ';
                         gameMap[i][j] = '!';
+                        return;
+                    }
+                }
+            }
+            if(action == 'w'){
+                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
+                {
+                    if(playerpos.x - 1 == i && playerpos.y == j)
+                    {
+                        playerpos.x -= 1;
+                        gameMap[i+1][j] = ' ';
+                        gameMap[i][j] = '!';
+                        return;
+                    }
+                }
+            }
+            if(action == 'a')
+            {
+                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
+                {
+                    if(playerpos.x == i && playerpos.y - 1 == j)
+                    {
+                        playerpos.y -= 1;
+                        gameMap[i][j+1] = ' ';
+                        gameMap[i][j] = '!';
+                        return;
+                    }
+                }
+            }
+
+            /* 4 Way to break i,j,k,l */
+            if(action == 'i')
+            {
+                if(gameMap[i][j] == '#')
+                {
+                    if(playerpos.x - 1 == i && playerpos.y == j)
+                    {
+                        gameMap[i][j] = ' ';
                         return;
                     }
                 }
@@ -75,42 +114,7 @@ void UpdateGame(char action)
             {
                 if(gameMap[i][j] == '#')
                 {
-                    if(playervec2.x + 1 == i && playervec2.y == j)
-                    {
-                        gameMap[i][j] = ' ';
-                        return;
-                    }
-                }
-            }
-            if(action == 's'){
-                if(gameMap[i][j] == ' ')
-                {
-                    if(playervec2.x + 1 == i && playervec2.y == j)
-                    {
-                        playervec2.x += 1;
-                        gameMap[i-1][j] = ' ';
-                        gameMap[i][j] = '!';
-                        return;
-                    }
-                }
-            }
-            if(action == 'w'){
-                if(gameMap[i][j] == ' ')
-                {
-                    if(playervec2.x - 1 == i && playervec2.y == j)
-                    {
-                        playervec2.x -= 1;
-                        gameMap[i+1][j] = ' ';
-                        gameMap[i][j] = '!';
-                        return;
-                    }
-                }
-            }
-            if(action == 'i')
-            {
-                if(gameMap[i][j] == '#')
-                {
-                    if(playervec2.x - 1 == i && playervec2.y == j)
+                    if(playerpos.x + 1 == i && playerpos.y == j)
                     {
                         gameMap[i][j] = ' ';
                         return;
@@ -120,39 +124,24 @@ void UpdateGame(char action)
             if(action == 'j'){
                 if(gameMap[i][j] == '#')
                 {
-                    if(playervec2.x == i && playervec2.y - 1 == j)
+                    if(playerpos.x == i && playerpos.y - 1 == j)
                     {
                         gameMap[i][j] = ' ';
                         return;
                     }
                 }
             }
-            if(action == 'a'){
-                if(gameMap[i][j] == ' ')
-                    if(playervec2.x == i && playervec2.y - 1 == j)
+            if(action == 'l')
+            {
+                if(gameMap[i][j] == '#')
+                {
+                    if(playerpos.x == i && playerpos.y+1 == j)
                     {
-                        playervec2.y -= 1;
-                        gameMap[i][j+1] = ' ';
-                        gameMap[i][j] = '!';
+                        gameMap[i][j] = ' ';
                         return;
                     }
                 }
-            }
+            }            
         }
-}
-
-bool IsUpdateMovementsApplied(int x, int y, char action){
-    if(action == 'l')
-    {
-        std::cout << x << ' ' << y << std::endl;
-        gameMap[x][y] = ' '; 
-        return true;
-        action = ' ';
     }
-
-    return false;
-}
-
-bool IsActionPossible(){
-    return false;
 }
