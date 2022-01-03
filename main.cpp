@@ -47,7 +47,7 @@ void UpdateGame(char action)
     {
         for(int j = 0; j < 8; j++)
         {
-            /* 4 direction to go with w,a,s,d*/
+            /* 4 direction to go with w,a,s,d */
             if(action == 'd')
                 Movements(i , j, 1, 0);
             if(action == 'a')
