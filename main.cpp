@@ -100,12 +100,11 @@ void Movements(int x, int y, int xDir, int yDir)
     {
         if(xpos+xDir == y && ypos+yDir == x)
         {
+            if(gameMap[x][y] == '$')  isWinTheGame = true;
             xpos += xDir;
             ypos += yDir;
             gameMap[x-yDir][y-xDir] = ' ';
             gameMap[x][y] = '!';
-            if(gameMap[x][y] == '$')
-                isWinTheGame = true;
         }
     }
 }
