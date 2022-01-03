@@ -37,11 +37,11 @@ int main()
         char action;
         std::cout << "Action :";
         std::cin >> action;
+        UpdateGame(action);
         if(isWinTheGame){
             std::cout << "\n\nGG Won !";
             return EXIT_SUCCESS;
         }
-        UpdateGame(action);
         /* <----- Render -----> */
         // Clear
         system("cls");
