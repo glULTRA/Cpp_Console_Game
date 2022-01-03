@@ -8,7 +8,6 @@ char gameMap[4][8] =
     {'@','#','#','#','#','@','#','#'},
 };
 char actionList[8] = {'w','s','a','d','i','k','j','l'};
-char playerPos = gameMap[0][0];
 typedef struct{
     int x = 0, y = 0;
 } PlayerVector2;
@@ -45,19 +44,10 @@ void ShowGameMap(){
 
 void UpdateGame(char action)
 {
-    //for(int i = 0; i < 4; i++){
-    //    for(int j = 0; j < 8; j++)
-    //    {
-    //        if(action == gameMap[i][j]){
-    //            //where is the player ? 
-    //            if(IsUpdateMovementsApplied(i, j, action))
-    //                return;
-    //        }
-    //    }
-    //}
-    if(action == 'l'){
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 8; j++)
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 8; j++)
+        {
+            if(action == 'l')
             {
                 if(gameMap[i][j] == '#')
                 {
@@ -68,11 +58,7 @@ void UpdateGame(char action)
                     }
                 }
             }
-        }
-    }
-    if(action == 'd'){
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 8; j++)
+            if(action == 'd')
             {
                 if(gameMap[i][j] == ' ')
                 {
@@ -85,11 +71,7 @@ void UpdateGame(char action)
                     }
                 }
             }
-        }
-    }
-    if(action == 'k'){
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 8; j++)
+            if(action == 'k')
             {
                 if(gameMap[i][j] == '#')
                 {
@@ -100,12 +82,7 @@ void UpdateGame(char action)
                     }
                 }
             }
-        }
-    }
-    if(action == 's'){
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 8; j++)
-            {
+            if(action == 's'){
                 if(gameMap[i][j] == ' ')
                 {
                     if(playervec2.x + 1 == i && playervec2.y == j)
@@ -117,13 +94,7 @@ void UpdateGame(char action)
                     }
                 }
             }
-        }
-    }
-
-    if(action == 'w'){
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 8; j++)
-            {
+            if(action == 'w'){
                 if(gameMap[i][j] == ' ')
                 {
                     if(playervec2.x - 1 == i && playervec2.y == j)
@@ -135,14 +106,9 @@ void UpdateGame(char action)
                     }
                 }
             }
-        }
-    }
-
-    if(action == 'i'){
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 8; j++)
+            if(action == 'i')
             {
-                if(gameMap[i][j] == ' ')
+                if(gameMap[i][j] == '#')
                 {
                     if(playervec2.x - 1 == i && playervec2.y == j)
                     {
@@ -151,13 +117,7 @@ void UpdateGame(char action)
                     }
                 }
             }
-        }
-    }
-
-    if(action == 'j'){
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 8; j++)
-            {
+            if(action == 'j'){
                 if(gameMap[i][j] == '#')
                 {
                     if(playervec2.x == i && playervec2.y - 1 == j)
@@ -167,14 +127,8 @@ void UpdateGame(char action)
                     }
                 }
             }
-        }
-    }
-    if(action == 'a'){
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 8; j++)
-            {
+            if(action == 'a'){
                 if(gameMap[i][j] == ' ')
-                {
                     if(playervec2.x == i && playervec2.y - 1 == j)
                     {
                         playervec2.y -= 1;
@@ -185,7 +139,6 @@ void UpdateGame(char action)
                 }
             }
         }
-    }
 }
 
 bool IsUpdateMovementsApplied(int x, int y, char action){
