@@ -18,6 +18,7 @@ void ShowGameMap();
 void UpdateGame(char action);
 void Movements(int x, int y, int xDir, int yDir);
 void BreakDir(int x, int y, int xDir, int yDir);
+void SearchForBlockGravity();
 
 int main()
 {
@@ -70,6 +71,7 @@ void UpdateGame(char action)
                 BreakDir(i, j,+1, 0);
         }
     }
+    SearchForBlockGravity();
 }
 
 void Movements(int x, int y, int xDir, int yDir)
@@ -98,6 +100,19 @@ void BreakDir(int x, int y, int xDir, int yDir)
                 return; 
             }
             gameMap[x][y] = ' ';
+        }
+    }
+}
+
+void SearchForBlockGravity(){
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 8; j++){
+            if(gameMap[i][j] == '@'){
+                if(gameMap[i+1][j] == ' '){
+                    gameMap[i][j] = ' ';
+                    gameMap[i+1][j] = '@';
+                }
+            }
         }
     }
 }
