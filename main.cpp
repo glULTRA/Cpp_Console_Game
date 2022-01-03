@@ -7,10 +7,10 @@ char gameMap[4][8] =
     {'#','@','#','#','#','#','$','#'},
     {'@','#','#','#','#','@','#','#'},
 };
-typedef struct{
-    int x = 0, y = 0;
-} PlayerVector2;
-PlayerVector2 playerpos{0,0};
+
+// Player Position
+int xpos = 0;
+int ypos = 0;
 
 void ShowGameMap();
 void UpdateGame(char action);
@@ -50,35 +50,10 @@ void UpdateGame(char action)
             {
                 if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
                 {
-                    if(playerpos.x == i && playerpos.y+1 == j)
+                    if(xpos+1 == j && ypos == i)
                     {
-                        playerpos.y += 1;
+                        xpos += 1;
                         gameMap[i][j-1] = ' ';
-                        gameMap[i][j] = '!';
-                        return;
-                    }
-                }
-            }
-            
-            if(action == 's'){
-                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
-                {
-                    if(playerpos.x + 1 == i && playerpos.y == j)
-                    {
-                        playerpos.x += 1;
-                        gameMap[i-1][j] = ' ';
-                        gameMap[i][j] = '!';
-                        return;
-                    }
-                }
-            }
-            if(action == 'w'){
-                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
-                {
-                    if(playerpos.x - 1 == i && playerpos.y == j)
-                    {
-                        playerpos.x -= 1;
-                        gameMap[i+1][j] = ' ';
                         gameMap[i][j] = '!';
                         return;
                     }
@@ -88,22 +63,48 @@ void UpdateGame(char action)
             {
                 if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
                 {
-                    if(playerpos.x == i && playerpos.y - 1 == j)
+                    if(xpos-1 == j && ypos == i)
                     {
-                        playerpos.y -= 1;
+                        xpos -= 1;
                         gameMap[i][j+1] = ' ';
                         gameMap[i][j] = '!';
                         return;
                     }
                 }
             }
+            
+            if(action == 's'){
+                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
+                {
+                    if(xpos == j && ypos+1 == i)
+                    {
+                        ypos += 1;
+                        gameMap[i-1][j] = ' ';
+                        gameMap[i][j] = '!';
+                        return;
+                    }
+                }
+            }
+            if(action == 'w'){
+                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
+                {
+                    if(xpos == j && ypos - 1 == i)
+                    {
+                        ypos -= 1;
+                        gameMap[i+1][j] = ' ';
+                        gameMap[i][j] = '!';
+                        return;
+                    }
+                }
+            }
+            
 
             /* 4 Way to break i,j,k,l */
             if(action == 'i')
             {
                 if(gameMap[i][j] == '#')
                 {
-                    if(playerpos.x - 1 == i && playerpos.y == j)
+                    if(xpos == j && ypos-1 == i)
                     {
                         gameMap[i][j] = ' ';
                         return;
@@ -114,7 +115,7 @@ void UpdateGame(char action)
             {
                 if(gameMap[i][j] == '#')
                 {
-                    if(playerpos.x + 1 == i && playerpos.y == j)
+                    if(xpos == j && ypos + 1 == i)
                     {
                         gameMap[i][j] = ' ';
                         return;
@@ -124,7 +125,7 @@ void UpdateGame(char action)
             if(action == 'j'){
                 if(gameMap[i][j] == '#')
                 {
-                    if(playerpos.x == i && playerpos.y - 1 == j)
+                    if(xpos - 1 == j && ypos == i)
                     {
                         gameMap[i][j] = ' ';
                         return;
@@ -135,7 +136,7 @@ void UpdateGame(char action)
             {
                 if(gameMap[i][j] == '#')
                 {
-                    if(playerpos.x == i && playerpos.y+1 == j)
+                    if(xpos + 1 == j && ypos == i)
                     {
                         gameMap[i][j] = ' ';
                         return;
