@@ -14,6 +14,8 @@ int ypos = 0;
 
 void ShowGameMap();
 void UpdateGame(char action);
+void Movements(int x, int y, int xDir, int yDir);
+void BreakDir(int x, int y, int xDir, int yDir);
 
 int main()
 {
@@ -45,104 +47,45 @@ void UpdateGame(char action)
     {
         for(int j = 0; j < 8; j++)
         {
-            /* 4 direction with w,a,s,d*/
+            /* 4 direction to go with w,a,s,d*/
             if(action == 'd')
-            {
-                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
-                {
-                    if(xpos+1 == j && ypos == i)
-                    {
-                        xpos += 1;
-                        gameMap[i][j-1] = ' ';
-                        gameMap[i][j] = '!';
-                        return;
-                    }
-                }
-            }
+                Movements(i , j, 1, 0);
             if(action == 'a')
-            {
-                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
-                {
-                    if(xpos-1 == j && ypos == i)
-                    {
-                        xpos -= 1;
-                        gameMap[i][j+1] = ' ';
-                        gameMap[i][j] = '!';
-                        return;
-                    }
-                }
-            }
-            
-            if(action == 's'){
-                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
-                {
-                    if(xpos == j && ypos+1 == i)
-                    {
-                        ypos += 1;
-                        gameMap[i-1][j] = ' ';
-                        gameMap[i][j] = '!';
-                        return;
-                    }
-                }
-            }
-            if(action == 'w'){
-                if(gameMap[i][j] == ' ' || gameMap[i][j] == '$')
-                {
-                    if(xpos == j && ypos - 1 == i)
-                    {
-                        ypos -= 1;
-                        gameMap[i+1][j] = ' ';
-                        gameMap[i][j] = '!';
-                        return;
-                    }
-                }
-            }
-            
+                Movements(i , j,-1, 0);
+            if(action == 's')
+                Movements(i , j, 0, 1);
+            if(action == 'w')
+                Movements(i , j, 0,-1);
 
             /* 4 Way to break i,j,k,l */
             if(action == 'i')
-            {
-                if(gameMap[i][j] == '#')
-                {
-                    if(xpos == j && ypos-1 == i)
-                    {
-                        gameMap[i][j] = ' ';
-                        return;
-                    }
-                }
-            }
+                BreakDir(i, j, 0,-1);
             if(action == 'k')
-            {
-                if(gameMap[i][j] == '#')
-                {
-                    if(xpos == j && ypos + 1 == i)
-                    {
-                        gameMap[i][j] = ' ';
-                        return;
-                    }
-                }
-            }
-            if(action == 'j'){
-                if(gameMap[i][j] == '#')
-                {
-                    if(xpos - 1 == j && ypos == i)
-                    {
-                        gameMap[i][j] = ' ';
-                        return;
-                    }
-                }
-            }
+                BreakDir(i, j, 0, 1);
+            if(action == 'j')
+                BreakDir(i, j,-1, 0);
             if(action == 'l')
-            {
-                if(gameMap[i][j] == '#')
-                {
-                    if(xpos + 1 == j && ypos == i)
-                    {
-                        gameMap[i][j] = ' ';
-                        return;
-                    }
-                }
-            }            
+                BreakDir(i, j,+1, 0);
         }
     }
+}
+
+void Movements(int x, int y, int xDir, int yDir)
+{
+    if(gameMap[x][y] == ' ' || gameMap[x][y] == '$')
+    {
+        if(xpos+xDir == y && ypos+yDir == x)
+        {
+            xpos += xDir;
+            ypos += yDir;
+            gameMap[x-yDir][y-xDir] = ' ';
+            gameMap[x][y] = '!';
+        }
+    }
+}
+void BreakDir(int x, int y, int xDir, int yDir)
+{
+    if(gameMap[x][y] == '#')
+        if(xpos + xDir == y && ypos + yDir == x)
+            gameMap[x][y] = ' ';
 }
