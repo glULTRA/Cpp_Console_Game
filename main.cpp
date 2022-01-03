@@ -1,5 +1,13 @@
 #include <iostream>
+#include <cmath>
 
+#if (_MSC_VER >= 1200)
+    #include <Windows.h>
+#else
+    #include <windows.h>
+#endif
+
+// Orginal Map
 char gameMap[4][8] = 
 {
     {'!','#','#','#','#','#','#','#'},
@@ -13,6 +21,7 @@ int xpos = 0;
 int ypos = 0;
 
 int score = 0;
+bool isWinTheGame = false;
 
 void ShowGameMap();
 void UpdateGame(char action);
@@ -29,7 +38,14 @@ int main()
         std::cout << "Action :";
         std::cin >> action;
         UpdateGame(action);
+        if(isWinTheGame){
+            std::cout << "\n\nGG Won !";
+            return EXIT_SUCCESS;
+        }
         /* <----- Render -----> */
+        // Clear
+        system("cls");
+        // Draw
         ShowGameMap();
     goto GameLoop;
 
@@ -46,6 +62,7 @@ void ShowGameMap(){
 
 void UpdateGame(char action)
 {
+    // User Input
     for(int i = 0; i < 4; i++)
     {
         for(int j = 0; j < 8; j++)
@@ -71,7 +88,10 @@ void UpdateGame(char action)
                 BreakDir(i, j,+1, 0);
         }
     }
+    // Fix Block Gravity.
     SearchForBlockGravity();
+
+
 }
 
 void Movements(int x, int y, int xDir, int yDir)
@@ -84,6 +104,8 @@ void Movements(int x, int y, int xDir, int yDir)
             ypos += yDir;
             gameMap[x-yDir][y-xDir] = ' ';
             gameMap[x][y] = '!';
+            if(gameMap[x][y] == '$')
+                isWinTheGame = true;
         }
     }
 }
