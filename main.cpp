@@ -12,6 +12,8 @@ char gameMap[4][8] =
 int xpos = 0;
 int ypos = 0;
 
+int score = 0;
+
 void ShowGameMap();
 void UpdateGame(char action);
 void Movements(int x, int y, int xDir, int yDir);
@@ -86,6 +88,16 @@ void Movements(int x, int y, int xDir, int yDir)
 void BreakDir(int x, int y, int xDir, int yDir)
 {
     if(gameMap[x][y] == '#')
+    {
         if(xpos + xDir == y && ypos + yDir == x)
+        {
+            // Check if block is above.
+            if(gameMap[x-1][y] == '@'){
+                gameMap[x-1][y] = ' '; 
+                gameMap[x][y] = '@';
+                return; 
+            }
             gameMap[x][y] = ' ';
+        }
+    }
 }
