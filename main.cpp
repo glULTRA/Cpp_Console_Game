@@ -97,16 +97,16 @@ void UpdateGame(char action)
             /* 4 direction to go with w,a,s,d */
             if(action == 'd')
                 if(Movements(i , j, 1, 0)) 
-                    return;
+                    break;
             if(action == 'a')
                 if(Movements(i , j,-1, 0))
-                    return;
+                    break;
             if(action == 's')
                 if(Movements(i , j, 0, 1))
-                    return;
+                    break;
             if(action == 'w')
                 if(Movements(i , j, 0,-1))
-                    return;
+                    break;
 
             /* 4 Way to break i,j,k,l */
             if(action == 'i')
@@ -121,8 +121,6 @@ void UpdateGame(char action)
     }
     // Fix Block Gravity.
     SearchForBlockGravity();
-
-
 }
 
 bool Movements(int x, int y, int xDir, int yDir)
@@ -256,7 +254,8 @@ bool IsMapGoodToPlay(){
                 {
                     return false;
                 }
-            }            
+            } 
+                    
         }
     }
     return true;
