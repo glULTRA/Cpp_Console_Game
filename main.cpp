@@ -36,11 +36,10 @@ int main()
 {
     // Generating random Numbers.
     srand(time(NULL));
-    // Generate Random Map.
-    GenerateRandomMap();
-    // Check The Map Again.
-    while(!IsMapGoodToPlay())
+    // Generate Random Map and Check The Map Again.
+    do{
         GenerateRandomMap();
+    }while(!IsMapGoodToPlay());
     
     // Show Game Map.
     ShowGameMap();
@@ -52,16 +51,15 @@ int main()
         std::cout << "Action :";
         std::cin >> action;
         UpdateGame(action);
-        if(isWinTheGame){
-            ShowGameMap();
-            std::cout << "\n\nGG Won !";
-            return EXIT_SUCCESS;
-        }
         /* <----- Render -----> */
         // Clear
         system("cls");
         // Draw
         ShowGameMap();
+        if(isWinTheGame){
+            std::cout << "\nGG You Win !";
+            return EXIT_SUCCESS;
+        }
     goto GameLoop;
 
 }
@@ -232,5 +230,16 @@ void GenerateRandomMap(){
 }
 
 bool IsMapGoodToPlay(){
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 8; j++){
+            if(gameMap[i][j] == gameMap[j][i]){
+                if(gameMap[i][j] == '@' && gameMap[j][i] == '@')
+                {
+                    std::cout << "Skipped due to stuation\n";
+                    return false;
+                }
+            }
+        }
+    }
     return true;
 }
