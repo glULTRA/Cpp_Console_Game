@@ -28,7 +28,7 @@ void GenerateRandomMap();
 bool IsMapGoodToPlay();
 void ShowGameMap();
 void UpdateGame(char action);
-void Movements(int x, int y, int xDir, int yDir);
+bool Movements(int x, int y, int xDir, int yDir);
 void BreakDir(int x, int y, int xDir, int yDir);
 void SearchForBlockGravity();
 
@@ -84,13 +84,17 @@ void UpdateGame(char action)
         {
             /* 4 direction to go with w,a,s,d */
             if(action == 'd')
-                Movements(i , j, 1, 0);
+                if(Movements(i , j, 1, 0)) 
+                    return;
             if(action == 'a')
-                Movements(i , j,-1, 0);
+                if(Movements(i , j,-1, 0))
+                    return;
             if(action == 's')
-                Movements(i , j, 0, 1);
+                if(Movements(i , j, 0, 1))
+                    return;
             if(action == 'w')
-                Movements(i , j, 0,-1);
+                if(Movements(i , j, 0,-1))
+                    return;
 
             /* 4 Way to break i,j,k,l */
             if(action == 'i')
@@ -109,7 +113,7 @@ void UpdateGame(char action)
 
 }
 
-void Movements(int x, int y, int xDir, int yDir)
+bool Movements(int x, int y, int xDir, int yDir)
 {
     if(gameMap[x][y] == ' ' || gameMap[x][y] == '$')
     {
@@ -120,8 +124,10 @@ void Movements(int x, int y, int xDir, int yDir)
             ypos += yDir;
             gameMap[x-yDir][y-xDir] = ' ';
             gameMap[x][y] = '!';
+            return true;
         }
     }
+    return false;
 }
 void BreakDir(int x, int y, int xDir, int yDir)
 {
