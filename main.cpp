@@ -20,8 +20,9 @@ char mapList[3] = {'#', '@', '$'};
 // Player Position
 int xpos = 0;
 int ypos = 0;
+int blockLevel = 4;
 
-int score = 0;
+static int score = 0;
 bool isWinTheGame = false;
 
 void GenerateRandomMap();
@@ -34,6 +35,8 @@ void SearchForBlockGravity();
 
 int main()
 {
+    // Play Again
+    PlayAgain:
     // Generating random Numbers.
     srand(time(NULL));
     // Generate Random Map and Check The Map Again.
@@ -57,7 +60,18 @@ int main()
         // Draw
         ShowGameMap();
         if(isWinTheGame){
-            std::cout << "\nGG You Win !";
+            static int level = 0;
+            score+=5;
+            ++level;
+            std::cout << "\nGG You Win !\n";
+            std::cout << "Score :" << ' ' << score << std::endl;
+            std::cout << "Level :" << ' ' << level << std::endl;
+            isWinTheGame = false;
+            xpos = 0;
+            ypos = 0;
+            gameMap[0][0] = '!';
+            blockLevel++;
+            goto PlayAgain;
             return EXIT_SUCCESS;
         }
     goto GameLoop;
@@ -172,24 +186,26 @@ void GenerateRandomMap(){
             Retry:
                 int getRandom = rand()%3;
                 gameMap[i][j] = mapList[rand()%3];
-                getMapList[interval] = gameMap[i][j];
 
                 // We should set $ at 5 - 8 position at least.
-                if(getMapList[interval] == '$' && j < 5)
+                if(gameMap[i][j] == '$' && j < 5)
                     goto Retry;
                 
                 // We shouldn't make to much block maybe 10 is enough.
-                if(getMapList[interval] == '@')
+                if(gameMap[i][j] == '@')
                     counterOfBlock++;
-                if(counterOfBlock > 10)
+
+                if(counterOfBlock > blockLevel)
                 {
                     counterOfBlock--;
                     goto Retry;
                 }
                 // We should check if player's both side is not blocked.
                 if(gameMap[i][j] == gameMap[0][1] || gameMap[i][j] == gameMap[1][0]){
-                    if(gameMap[i][j] == '@')
+                    if(gameMap[i][j] == '@'){
+                        counterOfBlock--;
                         goto Retry;
+                    }
                 }
 
                 // We should check if entire row or column is not blocked.
@@ -202,6 +218,7 @@ void GenerateRandomMap(){
                     if(entireBlockInRow > 3)
                     {
                         entireBlockInRow--;
+                        counterOfBlock--;
                         goto Retry;
                     }
                 }
@@ -212,21 +229,23 @@ void GenerateRandomMap(){
                     if(entireBlockInCol > 7)
                     {
                         entireBlockInCol--;
+                        counterOfBlock--;
                         goto Retry;
                     }
                 }
                 // We should only set one dollar $.
-                if(getMapList[interval] == '$')
+                if(gameMap[i][j] == '$')
                     counterOfDollar++;
                 if(counterOfDollar > 1)
                 {
                     counterOfDollar--;
-                    interval--;
                     goto Retry;
                 }
-                interval++;
         }
     }
+    if(counterOfBlock < blockLevel)
+        GenerateRandomMap();
+    
 }
 
 bool IsMapGoodToPlay(){
@@ -235,10 +254,9 @@ bool IsMapGoodToPlay(){
             if(gameMap[i][j] == gameMap[j][i]){
                 if(gameMap[i][j] == '@' && gameMap[j][i] == '@')
                 {
-                    std::cout << "Skipped due to stuation\n";
                     return false;
                 }
-            }
+            }            
         }
     }
     return true;
