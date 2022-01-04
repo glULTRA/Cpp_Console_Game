@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cmath>
+#include <ctime> // to generate random numbers
 
 #if (_MSC_VER >= 1200)
     #include <Windows.h>
@@ -15,6 +15,7 @@ char gameMap[4][8] =
     {'#','@','#','#','#','#','$','#'},
     {'@','#','#','#','#','@','#','#'},
 };
+char mapList[3] = {'#', '@', '$'};
 
 // Player Position
 int xpos = 0;
@@ -23,6 +24,8 @@ int ypos = 0;
 int score = 0;
 bool isWinTheGame = false;
 
+void GenerateRandomMap();
+bool IsMapGoodToPlay();
 void ShowGameMap();
 void UpdateGame(char action);
 void Movements(int x, int y, int xDir, int yDir);
@@ -31,7 +34,18 @@ void SearchForBlockGravity();
 
 int main()
 {
+    // Generating random Numbers.
+    srand(time(NULL));
+    // Generate Random Map.
+    GenerateRandomMap();
+    // Check The Map Again.
+    while(!IsMapGoodToPlay())
+        GenerateRandomMap();
+    
+    // Show Game Map.
     ShowGameMap();
+
+    // Starting Game Loop.
     GameLoop:
         /* <----- Update -----> */
         char action;
@@ -39,6 +53,7 @@ int main()
         std::cin >> action;
         UpdateGame(action);
         if(isWinTheGame){
+            ShowGameMap();
             std::cout << "\n\nGG Won !";
             return EXIT_SUCCESS;
         }
@@ -136,4 +151,80 @@ void SearchForBlockGravity(){
             }
         }
     }
+}
+
+void GenerateRandomMap(){
+    char getMapList[32];
+    int interval  = 0;
+    int counterOfDollar = 0;
+    int counterOfBlock  = 0;
+    int entireBlockInRow = 0;
+    int entireBlockInCol = 0;
+    for(int i = 0; i < 4; i++){
+        for (int j = 0; j < 8; j++){
+            // Skip Touching the player.
+            if(i == 0 && j == 0) continue;
+            // Touch other things.
+            Retry:
+                int getRandom = rand()%3;
+                gameMap[i][j] = mapList[rand()%3];
+                getMapList[interval] = gameMap[i][j];
+
+                // We should set $ at 5 - 8 position at least.
+                if(getMapList[interval] == '$' && j < 5)
+                    goto Retry;
+                
+                // We shouldn't make to much block maybe 10 is enough.
+                if(getMapList[interval] == '@')
+                    counterOfBlock++;
+                if(counterOfBlock > 10)
+                {
+                    counterOfBlock--;
+                    goto Retry;
+                }
+                // We should check if player's both side is not blocked.
+                if(gameMap[i][j] == gameMap[0][1] || gameMap[i][j] == gameMap[1][0]){
+                    if(gameMap[i][j] == '@')
+                        goto Retry;
+                }
+
+                // We should check if entire row or column is not blocked.
+                entireBlockInRow = 0;
+                entireBlockInCol = 0;
+                for(int row = 0; row < 4; row++)
+                {
+                    if(gameMap[row][j] == '@')
+                        entireBlockInRow++;
+                    if(entireBlockInRow > 3)
+                    {
+                        entireBlockInRow--;
+                        goto Retry;
+                    }
+                }
+                for(int col = 0; col < 8; col++)
+                {
+                    if(gameMap[i][col] == '@')
+                        entireBlockInRow++;
+                    if(entireBlockInCol > 7)
+                    {
+                        entireBlockInCol--;
+                        goto Retry;
+                    }
+                }
+                // We should only set one dollar $.
+                if(getMapList[interval] == '$')
+                    counterOfDollar++;
+                if(counterOfDollar > 1)
+                {
+                    counterOfDollar--;
+                    interval--;
+                    goto Retry;
+                }
+                interval++;
+        }
+    }
+}
+
+bool IsMapGoodToPlay(){
+    return true;
 }
